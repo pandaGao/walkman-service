@@ -1,0 +1,14 @@
+{
+  "name": "walkman-service",
+  "version": "1.0.0",
+  "description": "Multiple Platform music api for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/index.js"
+  },
+  "author": "pandaGao <me@pandagao.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.17.1"
+  }
+}
