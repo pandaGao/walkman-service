@@ -1,6 +1,6 @@
 {
   "name": "walkman-service",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Multiple Platform music api for Node.js",
   "main": "index.js",
   "scripts": {
