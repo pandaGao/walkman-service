@@ -6,7 +6,7 @@
 Multiple Platform music api for Node.js
 
 ## Inspired
-This project is inspired by [metowolf/Meting](https://github.com/metowolf/Meting).
+Inspired by [metowolf/Meting](https://github.com/metowolf/Meting).This project is just a Node.js implementation for a part of APIs in [metowolf/Meting](https://github.com/metowolf/Meting)
 
 ## Install 
 ```bash
@@ -30,3 +30,5 @@ service.search('旧词').then(res => {
 ```
 
 ## License
+
+MIT
