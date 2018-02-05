@@ -9,7 +9,7 @@ module.exports = class NeteaseService {
     this._config = {
       headers: {
         'Referer': 'https://music.163.com/',
-        'Cookie': `os=linux; appver=1.0.0.1026; osver=Ubuntu%2016.10; MUSIC_U=${utils.randomHex(112)}; __remember_me=true`,
+        'Cookie': `os=linux; deviceId=${utils.randomHex(52)}; osver=Ubuntu%2016.04.3%20LTS; appver=1.1.0.1232; channel=netease; MUSIC_A=${utils.randomHex(208)}; __csrf=${utils.randomHex(32)}`,
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
       }
     }
