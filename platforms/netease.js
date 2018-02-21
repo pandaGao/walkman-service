@@ -2,14 +2,13 @@ const querystring = require('querystring')
 const crypto = require('crypto')
 const axios = require('axios')
 const Buffer = require('buffer').Buffer
-const utils = require('../utils.js')
 
 module.exports = class NeteaseService {
   constructor () {
     this._config = {
       headers: {
-        'Referer': 'https://music.163.com/',
-        'Cookie': `os=linux; deviceId=${utils.randomHex(52)}; osver=Ubuntu%2016.04.3%20LTS; appver=1.1.0.1232; channel=netease; MUSIC_A=${utils.randomHex(208)}; __csrf=${utils.randomHex(32)}`,
+        'Host': 'music.163.com',
+        'Referer': 'http://music.163.com/',
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
       }
     }
