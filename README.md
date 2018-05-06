@@ -20,7 +20,9 @@ const MusicService = require('walkman-service')
 // Available Platforms ['kugou', 'netease', 'tencent', 'xiami']
 let service = new MusicService('netease')
 
-service.search('旧词').then(res => {
+service.search({
+  keyword: '旧词'
+}).then(res => {
   let song = res.data[0]
   console.log(song)
   service.lyric(song.id).then(res => console.log(res.data))
