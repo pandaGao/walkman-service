@@ -116,7 +116,10 @@ module.exports = class TencentService {
     }
   }
 
-  async search (keyword, page = 1, limit = 30) {
+  async search (options) {
+    let keyword = options.keyword || ''
+    let page = options.page || 1
+    let limit = options.limit || 30
     let result = await this._request({
       url: 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp',
       method: 'get',

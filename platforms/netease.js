@@ -50,6 +50,7 @@ module.exports = class NeteaseService {
         name: song.al.name,
         cover: song.al.picUrl
       },
+      lyrics: song.lyrics ? song.lyrics.join('\n') : '',
       platform: 'netease'
     }))
     return {
@@ -100,7 +101,11 @@ module.exports = class NeteaseService {
     }
   }
 
-  async search (keyword, page = 1, limit = 30) {
+  async search (options) {
+    let keyword = options.keyword || ''
+    let type = options.type || 1
+    let page = options.page || 1
+    let limit = options.limit || 30
     let result = await this._request({
       url: 'http://music.163.com/api/linux/forward',
       method: 'post',
@@ -108,7 +113,7 @@ module.exports = class NeteaseService {
         method: 'POST',
         params: {
           s: keyword,
-          type: 1,
+          type,
           limit,
           total: 'true',
           offset: (page - 1) * limit

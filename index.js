@@ -19,8 +19,8 @@ module.exports = class MusicService {
     }
   }
 
-  search (keyword, page = 1, limit = 30) {
-    return this[this._platform].search(keyword, page, limit)
+  search (options) {
+    return this[this._platform].search(options)
   }
 
   lyric (id) {

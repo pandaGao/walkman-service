@@ -95,7 +95,10 @@ module.exports = class KugouService {
     }
   }
 
-  async search (keyword, page = 1, limit = 30) {
+  async search (options) {
+    let keyword = options.keyword || ''
+    let page = options.page || 1
+    let limit = options.limit || 30
     let result = await this._request({
       url: 'http://ioscdn.kugou.com/api/v3/search/song',
       method: 'get',

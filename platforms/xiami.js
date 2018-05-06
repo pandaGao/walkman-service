@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const axios = require('axios')
 const utils = require('../utils.js')
 
@@ -113,7 +112,10 @@ module.exports = class XiamiService {
     }
   }
 
-  async search (keyword, page = 1, limit = 30) {
+  async search (options) {
+    let keyword = options.keyword || ''
+    let page = options.page || 1
+    let limit = options.limit || 30
     let result = await this._request({
       url: 'http://api.xiami.com/web',
       method: 'get',
