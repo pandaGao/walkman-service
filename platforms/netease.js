@@ -38,7 +38,7 @@ module.exports = class NeteaseService {
         origin: result
       }
     }
-    let songs = result.result.songs.map(song => ({
+    let songs = !result.result.songs ? [] : result.result.songs.map(song => ({
       id: song.id,
       name: song.name,
       artist: song.ar.map(a => ({
