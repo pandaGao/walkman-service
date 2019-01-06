@@ -101,11 +101,50 @@ module.exports = class NeteaseService {
     }
   }
 
+  _formatPlaylistResult (result) {
+    if (result.code !== 200) {
+      return {
+        success: false,
+        data: {},
+        origin: result
+      }
+    }
+    let songs = result.playlist.tracks.map(track => ({
+      id: track.id,
+      name: track.name,
+      artist: track.ar.map(a => ({
+        id: a.id,
+        name: a.name
+      })),
+      album: {
+        id: track.al.id,
+        name: track.al.name,
+        cover: track.al.picUrl
+      },
+      platform: 'netease'
+    }))
+    return {
+      success: true,
+      data: {
+        id: result.playlist.id,
+        name: result.playlist.name,
+        description: result.playlist.description,
+        cover: result.playlist.coverImgUrl,
+        songs,
+        platform: 'netease'
+      },
+      origin: result
+    }
+  }
+
   async search (options) {
     let keyword = options.keyword || ''
     let type = options.type || 1
     let page = options.page || 1
     let limit = options.limit || 30
+    if (type === 'lyric') {
+      type = 1006
+    }
     let result = await this._request({
       url: 'http://music.163.com/api/linux/forward',
       method: 'post',
@@ -157,5 +196,23 @@ module.exports = class NeteaseService {
       })
     })
     return this._formatUrlResult(result.data)
+  }
+
+  async playlist (id) {
+    let result = await this._request({
+      url: 'http://music.163.com/api/linux/forward',
+      method: 'post',
+      data: this._requestData({
+        method: 'POST',
+        params: {
+          s: 0,
+          id,
+          n: 1000,
+          t: 0
+        },
+        url: 'http://music.163.com/api/v3/playlist/detail'
+      })
+    })
+    return this._formatPlaylistResult(result.data)
   }
 }

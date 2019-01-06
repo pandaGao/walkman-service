@@ -16,7 +16,7 @@ module.exports = class TencentService {
     return axios.request(Object.assign({}, this._config, config))
   }
 
-  _formatSearchResult (result) {
+  _formatSongSearchResult (result) {
     if (result.code !== 0) {
       return {
         success: false,
@@ -35,6 +35,35 @@ module.exports = class TencentService {
         id: song.album.mid,
         name: song.album.name
       },
+      platform: 'tencent'
+    }))
+    return {
+      success: true,
+      data: songs,
+      origin: result
+    }
+  }
+
+  _formatLyricSearchResult (result) {
+    if (result.code !== 0) {
+      return {
+        success: false,
+        data: {},
+        origin: result
+      }
+    }
+    let songs = result.data.lyric.list.map(song => ({
+      id: song.mid,
+      name: song.name,
+      artist: song.singer.map(a => ({
+        id: a.mid,
+        name: a.name
+      })),
+      album: {
+        id: song.album.mid,
+        name: song.album.name
+      },
+      lyric: song.content.replace(/<em>/g, '').replace(/<\/em>/g, ''),
       platform: 'tencent'
     }))
     return {
@@ -116,10 +145,50 @@ module.exports = class TencentService {
     }
   }
 
+  _formatPlaylistResult (result) {
+    if (result.code !== 0) {
+      return {
+        success: false,
+        data: {},
+        origin: result
+      }
+    }
+    let playlist = result.data.cdlist[0]
+    let songs = playlist.songlist.map(song => ({
+      id: song.mid,
+      name: song.name,
+      artist: song.singer.map(a => ({
+        id: a.mid,
+        name: a.name
+      })),
+      album: {
+        id: song.album.mid,
+        name: song.album.name
+      },
+      platform: 'tencent'
+    }))
+    return {
+      success: true,
+      data: {
+        id: playlist.disstid,
+        name: playlist.dissname,
+        description: playlist.desc,
+        cover: playlist.logo,
+        songs,
+        platform: 'tencent'
+      },
+      origin: result
+    }
+  }
+
   async search (options) {
     let keyword = options.keyword || ''
     let page = options.page || 1
     let limit = options.limit || 30
+    let type = options.type || 0
+    if (type === 'lyric') {
+      type = 7
+    }
     let result = await this._request({
       url: 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp',
       method: 'get',
@@ -128,13 +197,14 @@ module.exports = class TencentService {
         p: page,
         n: limit,
         w: keyword,
+        t: type,
         aggr: 1,
         lossless: 1,
         cr: 1,
         new_json: 1
       }
     })
-    return this._formatSearchResult(result.data)
+    return (type === 7 || type === '7') ? this._formatLyricSearchResult(result.data) : this._formatSongSearchResult(result.data)
   }
 
   async lyric (id) {
@@ -160,5 +230,19 @@ module.exports = class TencentService {
       }
     })
     return this._formatUrlResult(result.data, bitRate)
+  }
+
+  async playlist (id) {
+    let result = await this._request({
+      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_playlist_cp.fcg',
+      method: 'get',
+      params: {
+        id,
+        format: 'json',
+        newsong: 1,
+        platform: 'jqspaframe.json'
+      }
+    })
+    return this._formatPlaylistResult(result.data)
   }
 }

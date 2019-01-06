@@ -30,4 +30,8 @@ module.exports = class MusicService {
   url (id, bitRate = 320) {
     return this[this._platform].url(id, bitRate)
   }
+
+  playlist (id) {
+    return this[this._platform].playlist(id)
+  }
 }

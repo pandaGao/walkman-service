@@ -95,6 +95,47 @@ module.exports = class KugouService {
     }
   }
 
+  async _formatPlaylistResult (result, id) {
+    if (result.status !== 1) {
+      return {
+        success: false,
+        data: {},
+        origin: result
+      }
+    }
+    let songs = result.data.info.map(song => {
+      let [artist, songname] = song.filename.split(' - ')
+      if (!songname) {
+        artist = []
+        songname = artist.trim()
+      } else {
+        artist = artist.split('、').map(a => ({
+          name: a
+        }))
+        songname = songname.trim()
+      }
+      return {
+        id: song.hash,
+        name: songname,
+        artist,
+        album: {
+          id: song.album_id,
+          name: song.remark
+        },
+        platform: 'kugou'
+      }
+    })
+    return {
+      success: true,
+      data: {
+        id,
+        songs,
+        platform: 'kugou'
+      },
+      origin: result
+    }
+  }
+
   async search (options) {
     let keyword = options.keyword || ''
     let page = options.page || 1
@@ -151,5 +192,21 @@ module.exports = class KugouService {
       }
     })
     return this._formatUrlResult(result.data, bitRate)
+  }
+
+  async playlist (id) {
+    let result = await this._request({
+      url: 'http://mobilecdn.kugou.com/api/v3/special/song',
+      method: 'get',
+      params: {
+        specialid: id,
+        area_code: 1,
+        page: 1,
+        plat: 2,
+        pagesize: -1,
+        version: 8990
+      }
+    })
+    return this._formatPlaylistResult(result.data, id)
   }
 }
